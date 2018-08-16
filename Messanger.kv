@@ -1,0 +1,90 @@
+<Box>:
+    id:box
+    orientation:'vertical'
+#top menu
+    BoxLayout:
+        size_hint:.5,.05
+        spacing:0
+        FileButton:
+            text:'File'
+            DropDowen:
+                id:dropdown
+                pos:0,root.height
+                Button:
+                    text:'reload'
+                    size_hint_y:None
+                    height:40
+        EditButton:
+            on_press:print(box.posts)
+
+        Button:
+            text:'View'
+
+        HelpButton:
+
+#content
+    Main:
+        asd:'some text here'
+        size_hint:1, .95
+        orientation:'horizontal'
+        spacing:10
+        ScrollView:
+            size_hint:.3,1
+            Shelfs:
+                orientation:'vertical'
+                spacing:5
+                size_hint_y:None
+                height: self.minimum_height
+
+        ScrollView:
+            size_hint:.7,1
+            Positions:
+                id:posit
+                orientation:'vertical'
+                spacing:5
+                size_hint_y:None
+                height: self.minimum_height
+
+
+<Shelf>:
+    text:'Shelf:{}   count:{}'.format(self.shelf,self.count)
+    height:30
+    size_hint_y:None
+    on_press:app.box.ids['posit'].info(self.shelf)
+<Asic>:
+    pos:self.pos
+    size_hint_y:None
+    height:30
+    cols:3
+    rows:1
+    canvas:
+        Rectangle:
+            size: root.width, root.height
+            pos:root.pos
+    Label:
+        text:root.shelf
+        color:(0,0,0,1)
+        text_size: self.width, self.height
+        font_size:25
+        size_hint_y:1
+        size: self.texture_size
+        valign:'top'
+        halign:'left'
+    Label:
+        text:root.poss
+        color:(0,0,0,1)
+        text_size: self.width, self.height
+        font_size:25
+        size_hint_y:1
+        size: self.texture_size
+        valign:'top'
+        halign:'left'
+    Label:
+        text:root.status
+        color:(0,0,0,1)
+        text_size: self.width, self.height
+        font_size:25
+        size_hint_y:1
+        size: self.texture_size
+        valign:'top'
+        halign:'left'
