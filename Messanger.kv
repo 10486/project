@@ -55,36 +55,11 @@
     pos:self.pos
     size_hint_y:None
     height:30
-    cols:3
-    rows:1
+    text:'192.168.{}.{}---{}'.format(self.shelf,self.poss,self.status)
+    color:(1,1,1,1)if self.status=="ACTIVE"else (1,0,0,1)
     canvas:
+        Color:
+            rgba:root.color
         Rectangle:
-            size: root.width, root.height
             pos:root.pos
-    Label:
-        text:root.shelf
-        color:(0,0,0,1)
-        text_size: self.width, self.height
-        font_size:25
-        size_hint_y:1
-        size: self.texture_size
-        valign:'top'
-        halign:'left'
-    Label:
-        text:root.poss
-        color:(0,0,0,1)
-        text_size: self.width, self.height
-        font_size:25
-        size_hint_y:1
-        size: self.texture_size
-        valign:'top'
-        halign:'left'
-    Label:
-        text:root.status
-        color:(0,0,0,1)
-        text_size: self.width, self.height
-        font_size:25
-        size_hint_y:1
-        size: self.texture_size
-        valign:'top'
-        halign:'left'
+            size:root.size[0]/10,root.size[1]

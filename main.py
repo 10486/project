@@ -17,6 +17,10 @@ import os
 import json
 import requests
 import config
+
+import ui
+from positions import Positions
+from shelfs import Shelfs
 sys.path.append(os.path.join(sys.path[0], 'sub/'))
 
 
@@ -38,18 +42,9 @@ class ViewButton(Button):
 
 
 
-class Asic(GridLayout):
-    def __init__(self,shelf,poss,status,*args,**kargs):
-        self.poss = poss
-        self.shelf = shelf
-        self.status = status
-        super(Asic, self).__init__(*args,**kargs)
 
-class Shelf(Button):
-    def __init__(self,shelf,count,*args,**kargs):
-        self.count = count
-        self.shelf = shelf
-        super(Shelf, self).__init__(*args,**kargs)
+
+
 
 
 
