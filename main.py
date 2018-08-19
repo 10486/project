@@ -19,10 +19,10 @@ import requests
 import config
 import time
 
-import par
-import ui
-from positions import Positions
-from shelfs import Shelfs
+import sub.par as par
+import sub.ui
+from sub.positions import Positions
+from sub.shelfs import Shelfs
 sys.path.append(os.path.join(sys.path[0], 'sub/'))
 
 

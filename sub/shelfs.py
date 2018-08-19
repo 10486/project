@@ -1,5 +1,5 @@
 from kivy.uix.boxlayout import BoxLayout
-from shelf import Shelf
+from sub.shelf import Shelf
 class Shelfs(BoxLayout):
     def __init__(self,*args,**kargs):
         super(Shelfs, self).__init__(*args,**kargs)
