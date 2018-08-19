@@ -17,7 +17,9 @@ import os
 import json
 import requests
 import config
+import time
 
+import par
 import ui
 from positions import Positions
 from shelfs import Shelfs
@@ -39,14 +41,6 @@ class ViewButton(Button):
     def __init__(self, *arg,**kargs):
         super(ViewButton, self).__init__(*arg,**kargs)
         self.text = 'View'
-
-
-
-
-
-
-
-
 
 
 class FileButton(Button):
@@ -86,31 +80,42 @@ class DropDowen(DropDown):
 #main Layout
 class Box(BoxLayout):
     pass
-####################################################################################
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##############################################################################
 #main App
 class MessangerApp(App):
     def __init__(self):
         super(MessangerApp,self).__init__()
         self.title = 'Асики'
     def build(self):
+        self.parser = par.Parser('new.txt')
+        self.t = threading.Thread(target=self.daemon,name='daemon')
+        self.t.daemon = True
+        self.t.start()
         self.box = Box()
         return self.box
+
+    def daemon(self):
+        while True:
+            self.parser.loadinfo()
+            with open('old.txt','r',encoding='utf-8') as old:
+                with open('new.txt','r',encoding='utf-8') as new:
+                    new = new.readlines()
+                    old = old.readlines()
+                    exeption = []
+                    for i,item in enumerate(old):
+                        if (new[i] != item):
+                            exeption.append([item,new[i]])
+                            #
+                            #отображение информации
+                            #
+            with open('new.txt','r',encoding='utf-8') as new:
+                with open('old.txt','r',encoding='utf-8') as old:
+                    old.write(new.read)
+            print(exeption)
+            self.parser.clear()
+            time.sleep(1800)
+
+
 
 #run
 if __name__=='__main__':
