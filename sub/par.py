@@ -17,6 +17,7 @@ class Parser(object):
                     if((len(item_name)) >= 2):
                         f.write('F:{};N:{};S:{}\n'.format(item_name[0],item_name[1],item['status']))
     def __parse(self,i):
+        
         url = '\
 https://eu-pool.api.btc.com/v1/worker/?group=0\
 &page={}\
