@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -6,18 +7,19 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.config import Config
 from kivy.uix.widget import Widget
+from kivy.uix.modalview import ModalView
 from kivy.uix.scrollview import ScrollView
 from kivy.core.window import Window
 from kivy.uix.dropdown import DropDown
 from kivy.properties import NumericProperty, ReferenceListProperty,\
     ObjectProperty
-import sys
 import threading
 import os
 import json
 import requests
 import config
 import time
+import sys
 
 import sub.par as par
 import sub.ui
@@ -32,50 +34,42 @@ Config.set('graphics','resizable','0')
 Config.set('graphics','width',600)
 Config.set('graphics','height',500)
 
+class HelpInfo(Label):
+    def __init__(self, *arg, **karg):
+        super(HelpInfo, self).__init__(*arg,**karg)
+        with open('help.help','r',encoding='utf-8') as f:
+            self.text = f.read()
 
+
+
+class Help(ModalView):
+    def __init__(self, *arg,**karg):
+        super(Help, self).__init__()
 
 
 
 #top menu
-class ViewButton(Button):
+class Sort(Button):
     def __init__(self, *arg,**kargs):
-        super(ViewButton, self).__init__(*arg,**kargs)
-        self.text = 'View'
+        super(Sort, self).__init__(*arg,**kargs)
+        self.text = 'Сортировка'
 
-
-class FileButton(Button):
+class Show(Button):
     def __init__(self, *arg,**kargs):
-        super(FileButton, self).__init__(*arg)
+        super(Show, self).__init__(*arg)
+        self.text = 'Показать неактив.'
+
+class Reload(Button):
+    def __init__(self, *arg,**kargs):
+        super(Reload, self).__init__(*arg)
+        self.text = 'Перезагрузка'
+
 
 
 class HelpButton(Button):
     def __init__(self, *arg,**kargs):
         super(HelpButton, self).__init__(*arg)
-        self.text = 'Help'
-
-
-
-
-
-
-class EditButton(Button):
-    def __init__(self, *arg,**karg):
-        super(EditButton, self).__init__(*arg,**karg)
-        self.text = 'Edit'
-    # def on_press(self):
-    #     proc = subprocess.run("python addPost.py", shell=True, stdout=subprocess.PIPE)
-
-
-class DropDowen(DropDown):
-    def __init__(self, *arg,**karg):
-        super(DropDowen, self).__init__()
-
-
-
-
-
-
-
+        self.text = 'Помощь'
 
 #main Layout
 class Box(BoxLayout):
@@ -87,35 +81,36 @@ class MessangerApp(App):
         super(MessangerApp,self).__init__()
         self.title = 'Асики'
     def build(self):
+        # self.load = ModalView()
         self.parser = par.Parser('new.txt')
+        # self.parser.loadinfo()
         self.t = threading.Thread(target=self.daemon,name='daemon')
         self.t.daemon = True
         self.t.start()
         self.box = Box()
+        self.modal = Help()
         return self.box
-
+#Переделать Функцию сравнения
     def daemon(self):
         while True:
             self.parser.loadinfo()
             with open('old.txt','r',encoding='utf-8') as old:
                 with open('new.txt','r',encoding='utf-8') as new:
-                    new = new.readlines()
-                    old = old.readlines()
-                    exeption = []
-                    for i,item in enumerate(old):
-                        if (new[i] != item):
-                            exeption.append([item,new[i]])
+                    new = json.loads(new.read())
+                    old = json.loads(old.read())
+                    ex = []
+                    for i in new:
+                        dif = set(old[i]['ACTIVE']).difference(set(new[i]['ACTIVE']))
+                        if(len(dif)>0):
+                            ex.append([dif,i])
                             #
                             #отображение информации
                             #
             with open('new.txt','r',encoding='utf-8') as new:
-                with open('old.txt','r',encoding='utf-8') as old:
-                    old.write(new.read)
-            print(exeption)
+                with open('old.txt','w',encoding='utf-8') as old:
+                    old.write(str(new.read()))
             self.parser.clear()
-            time.sleep(1800)
-
-
+            time.sleep(90)
 
 #run
 if __name__=='__main__':

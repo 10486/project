@@ -1,26 +1,23 @@
+Box:
 <Box>:
     id:box
     orientation:'vertical'
 #top menu
     BoxLayout:
-        size_hint:.5,.05
+        size_hint:1,.05
         spacing:0
-        FileButton:
-            text:'File'
-            DropDowen:
-                id:dropdown
-                pos:0,root.height
-                Button:
-                    text:'reload'
-                    size_hint_y:None
-                    height:40
-        EditButton:
-            on_press:print(box.posts)
+        Reload:
+            on_press:app.box.ids['shelfs'].info()
 
-        Button:
-            text:'View'
+
+        Sort:
+            on_press:print(box)
+
+        Show:
+
 
         HelpButton:
+            on_press:app.modal.open()
 
 #content
     Main:
@@ -31,6 +28,7 @@
         ScrollView:
             size_hint:.3,1
             Shelfs:
+                id:shelfs
                 orientation:'vertical'
                 spacing:5
                 size_hint_y:None
@@ -47,7 +45,6 @@
 
 
 <Shelf>:
-    text:'Shelf:{}   count:{}'.format(self.shelf,self.count)
     height:30
     size_hint_y:None
     on_press:app.box.ids['posit'].info(self.shelf)
@@ -63,3 +60,6 @@
         Rectangle:
             pos:root.pos
             size:root.size[0]/10,root.size[1]
+<Help>:
+    size_hint:1,.6
+    HelpInfo:

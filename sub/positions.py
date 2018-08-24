@@ -1,20 +1,23 @@
+# -*- coding: utf-8 -*-
+
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-import config
+# import config
+import json
 class Positions(BoxLayout):
     def __init__(self,*args,**kargs):
         super(Positions, self).__init__(*args,**kargs)
     def info(self,shelf):
         self.clear_widgets()
         with open('file.txt','r') as f:
-            f = f.readlines()
-            asics = {str(x+1):'Not found' for x in range(2,config.shelfs[shelf])}
-            for i in f:
-                i = i.split(';')
-                if(i[0][2:] == str(shelf)):
-                    asics[i[1][2:]] = i[2][2:-1]
+            f = f.read()
+            f = json.loads(f)
+            asics = {str(x+1):'Нет в пуле' for x in range(2,40)}
+            s = f[str(shelf)]
+            for i in s:
+                for k in s[i]:
+                    asics[k] = i
             for asic in asics:
-
                 self.add_widget(Asic(shelf,asic,asics[asic]))
 
 class Asic(Button):

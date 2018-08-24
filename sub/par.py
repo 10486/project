@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import threading
 import requests
 import json
@@ -10,14 +12,18 @@ class Parser(object):
             t = threading.Thread(target=self.__parse,name='thread#{}'.format(i),args=(i,))
             t.start()
             t.join()
+        self.info = {x+1 : {'ACTIVE':[],'INACTVE':[]} for x in range(26)}
+
+        for a in self.response:
+            for item in self.response[a]['data']['data']:
+                item['worker_name'] = item_name = item['worker_name'].split('x')
+                if((len(item_name)) >= 2):
+                    self.info[int(item_name[0])][item['status']].append(item_name[1])
         with open(self.file,'w',encoding='utf-8') as f:
-            for a in self.response:
-                for item in self.response[a]['data']['data']:
-                    item['worker_name'] = item_name = item['worker_name'].split('x')
-                    if((len(item_name)) >= 2):
-                        f.write('F:{};N:{};S:{}\n'.format(item_name[0],item_name[1],item['status']))
+            f.write(json.dumps(self.info))
+        del self.info
+
     def __parse(self,i):
-        
         url = '\
 https://eu-pool.api.btc.com/v1/worker/?group=0\
 &page={}\
@@ -32,4 +38,4 @@ https://eu-pool.api.btc.com/v1/worker/?group=0\
         self.response[str(i)] = dict
 
     def clear(self):
-        del self.response
+        self.response = {}
