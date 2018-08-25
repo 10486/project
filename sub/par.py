@@ -12,7 +12,7 @@ class Parser(object):
             t = threading.Thread(target=self.__parse,name='thread#{}'.format(i),args=(i,))
             t.start()
             t.join()
-        self.info = {x+1 : {'ACTIVE':[],'INACTVE':[]} for x in range(26)}
+        self.info = {x+1 : {'ACTIVE':[],'INACTIVE':[]} for x in range(26)}
 
         for a in self.response:
             for item in self.response[a]['data']['data']:
