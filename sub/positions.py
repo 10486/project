@@ -7,6 +7,7 @@ import json
 class Positions(BoxLayout):
     def __init__(self,*args,**kargs):
         super(Positions, self).__init__(*args,**kargs)
+        self.sort = 'ip'
     def info(self,shelf):
         self.clear_widgets()
         with open('file.txt','r') as f:
@@ -17,8 +18,22 @@ class Positions(BoxLayout):
             for i in s:
                 for k in s[i]:
                     asics[k] = i
-            for asic in asics:
-                self.add_widget(Asic(shelf,asic,asics[asic]))
+            if(self.sort == 'ip'):
+                for asic in asics:
+                    self.add_widget(Asic(shelf,asic,asics[asic]))
+            elif(self.sort == 'status'):
+                for asic in asics:
+                    if(asics[asic] != 'ACTIVE'):
+                        self.add_widget(Asic(shelf,asic,asics[asic]))
+                for asic in asics:
+                    if(asics[asic] == 'ACTIVE'):
+                        self.add_widget(Asic(shelf,asic,asics[asic]))
+    def selectsort(self):
+        if(self.sort == 'ip'):
+            self.sort = 'status'
+        elif(self.sort == 'status'):
+            self.sort = 'ip'
+        print('something')
 
 class Asic(Button):
     def __init__(self,shelf,poss,status,*args,**kargs):

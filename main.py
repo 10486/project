@@ -53,6 +53,7 @@ class Sort(Button):
     def __init__(self, *arg,**kargs):
         super(Sort, self).__init__(*arg,**kargs)
         self.text = 'Сортировка'
+    
 
 class Show(Button):
     def __init__(self, *arg,**kargs):
