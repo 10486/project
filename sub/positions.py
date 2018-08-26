@@ -2,7 +2,8 @@
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from config import shelfs as config
+config = {}
+exec(open('config.conf').read(),config)
 import json
 class Positions(BoxLayout):
     def __init__(self,*args,**kargs):
@@ -13,7 +14,7 @@ class Positions(BoxLayout):
         with open('file.txt','r') as f:
             f = f.read()
             f = json.loads(f)
-            asics = {str(x+1):'Нет в пуле' for x in range(config[shelf][0],config[shelf][1])}
+            asics = {str(x+1):'Нет в пуле' for x in range(config['_'+shelf][0],config['_'+shelf][1])}
             s = f[str(shelf)]
             for i in s:
                 for k in s[i]:

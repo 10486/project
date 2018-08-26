@@ -17,10 +17,12 @@ import threading
 import os
 import json
 import requests
-import config
+import configparser
 import time
 import sys
-
+import subprocess
+config = {}
+exec(open('config.conf').read(),config)
 import sub.par as par
 import sub.ui
 from sub.positions import Positions
@@ -82,16 +84,14 @@ class ParserApp(App):
         super(ParserApp,self).__init__()
         self.title = 'Асики'
     def build(self):
-        # self.load = ModalView()
         self.parser = par.Parser('new.txt')
-        # par.Parser().loadinfo()
+        par.Parser().loadinfo()
         self.t = threading.Thread(target=self.daemon,name='daemon')
-        self.t.daemon = True
         self.t.start()
         self.box = Box()
         self.modal = Help()
         return self.box
-#Переделать Функцию сравнения
+#Демон для проверки выхода из пула асиков
     def daemon(self):
         while True:
             self.parser.loadinfo()
@@ -103,15 +103,21 @@ class ParserApp(App):
                     for i in new:
                         dif = set(old[i]['ACTIVE']).difference(set(new[i]['ACTIVE']))
                         if(len(dif)>0):
-                            ex.append([dif,i])
-                            #
-                            #отображение информации
-                            #
+                            ex.append([list(dif),i])
+                    if(len(ex) > 0):
+                        subproc = subprocess.Popen('python alert.py', stdin=subprocess.PIPE,stdout=subprocess.PIPE)
+                        subproc.communicate(bytes(json.dumps(ex),encoding='utf-8'))
+                        subproc.wait()
+                        subproc.kill()
             with open('new.txt','r',encoding='utf-8') as new:
                 with open('old.txt','w',encoding='utf-8') as old:
                     old.write(str(new.read()))
             self.parser.clear()
-            time.sleep(90)
+            proc = os.getpid()
+            with open('close.cmd','w',encoding='utf-8') as f:
+                f.write('taskkill /PID {} /F'.format(proc))
+            print(proc)
+            time.sleep(1800)
 
 #run
 if __name__=='__main__':
